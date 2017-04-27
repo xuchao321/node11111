@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    div{
+        margin-bottom: 5px;
+        border  :1px red solid;
+        height: 500px;
+        width: 500px;
+    }
+</style>
+
+<body>
+<div id="duihuakuang"> </div>
+
+姓名<input id="send" placeholder="请舒姓名">
+内容<input  id="neirong" placeholder="请舒内容">
+<a href="javascript:void(0) " onclick="fasong()">发送</a>
+<a href="javascript:void(0)" onclick="home()">推出</a>
+</body>
+<script    src="./js/jquery-2.2.4.min.js"></script>
+<script>
+    var ws=new  WebSocket("ws://localhost:4567/");
+    ws.onopen=function(){
+        $("#duihuakuang").html("当前的连接状态是readyState"+ws.readyState)
+    }
+    ws.onmessage=function (res) {
+        $("#duihuakuang").append("<br>"+res.data)
+    }
+    ws.onclose=function (res) {
+        window.location.reload();
+    }
+    function fasong() {
+        var name=$("#send").val();
+        var neirong=$("#neirong").val();
+        var str="{name:'"+name+"',neirong:'"+neirong+"'}";
+        ws.send(str)
+    }
+    function home() {
+        ws.close();
+    }
+</script>
+</html>
